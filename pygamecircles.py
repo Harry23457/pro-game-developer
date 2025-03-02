@@ -21,6 +21,7 @@ c3=mycircle("red",(250,250),120,15)
 c4=mycircle("blue",(250,250),140,15)
 c5=mycircle("orange",(250,250),200,15)
 
+
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -32,5 +33,20 @@ while True:
             c4.draw()
             c5.draw()
             pygame.display.update()
+        elif event.type==pygame.MOUSEBUTTONUP:
+            c1.growcircle(6)
+            c2.growcircle(6)
+            c3.growcircle(6)
+            c4.growcircle(6)
+            c5.growcircle(6)
+            pygame.display.update()
+
+        elif event.type==pygame.MOUSEMOTION:
+            pos=pygame.mouse.get_pos()
+            c6=mycircle("Black",pos,4)
+            c6.draw()
+            pygame.display.update()
+            
+
 
         
