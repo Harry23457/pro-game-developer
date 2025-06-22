@@ -10,6 +10,8 @@ rhealth=10
 yhealth=10
 yellow=pygame.Rect(100,350,50,50)
 red=pygame.Rect(600,350,50,50)
+redbullet=[]
+yellowbullet=[]
 def draw():
     screen.blit(bg,(0,0))
     screen.blit(image1,(yellow.x,yellow.y))
@@ -20,6 +22,10 @@ def draw():
     screen.blit(text1,(500,50))
     text2=font.render("Health:"+str(yhealth),True,"white")
     screen.blit(text2,(50,50))
+    for i in redbullet:
+        pygame.draw.rect(screen,"red",i)
+    for i in yellowbullet:
+        pygame.draw.rect(screen,"yellow",i)
 
 def yellow_move(keys):
     if keys[pygame.K_a] and yellow.x>0:
@@ -40,18 +46,52 @@ def red_move(keys):
         red.y-=5
     if keys[pygame.K_DOWN] and red.y<650:
         red.y+=5
-    
-    
+
+def hit(yellowbullet,redbullet):
+    global rhealth,yhealth
+    for i in yellowbullet:
+        i.x+=10
+        if red.colliderect(i):
+            rhealth-=1
+            yellowbullet.remove(i)
+        elif i.x==700:
+            yellowbullet.remove(i)
+    for i in redbullet:
+        i.x-=10
+        if yellow.colliderect(i):
+            rhealth-=1
+            redbullet.remove(i)
+        elif i.x==0:
+            if yellow.colliderect(i):
+               yhealth-=1
+               redbullet.remove(i)
+
+
+            
+
+
+
+
+  
           
 
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             exit()
+        if event.type==pygame.KEYDOWN:
+            if event.key==pygame.K_f:
+                bullet=pygame.Rect(yellow.x+25,yellow.y+25,8,4)
+                yellowbullet.append(bullet)
+            if event.key==pygame.K_RSHIFT:
+                bullet=pygame.Rect(red.x,red.y+25,8,4)
+                redbullet.append(bullet)
+
     draw()
     keys=pygame.key.get_pressed()
     yellow_move(keys)
     red_move(keys)
+    hit(yellowbullet,redbullet)
     pygame.display.update()
 
 
