@@ -1,6 +1,8 @@
 import pygame
 pygame.init()
 screen=pygame.display.set_mode((700,700))
+winner=""
+gameover=False
 pygame.display.set_caption("space invaders")
 image1=pygame.transform.rotate(pygame.transform.scale(pygame.image.load("space r.png"),(50,50)),90)
 image2=pygame.transform.rotate(pygame.transform.scale(pygame.image.load("space y.png"),(50,50)),270)
@@ -26,7 +28,12 @@ def draw():
         pygame.draw.rect(screen,"red",i)
     for i in yellowbullet:
         pygame.draw.rect(screen,"yellow",i)
+    text3=font.render("Game over winner is "+winner,True,"white")
+    if gameover==True:
+        screen.blit(text3,(170,350))
 
+
+    
 def yellow_move(keys):
     if keys[pygame.K_a] and yellow.x>0:
         yellow.x-=5
@@ -49,25 +56,39 @@ def red_move(keys):
 
 def hit(yellowbullet,redbullet):
     global rhealth,yhealth
-    for i in yellowbullet:
-        i.x+=10
-        if red.colliderect(i):
-            rhealth-=1
-            yellowbullet.remove(i)
-        elif i.x==700:
-            yellowbullet.remove(i)
-    for i in redbullet:
-        i.x-=10
-        if yellow.colliderect(i):
-            rhealth-=1
-            redbullet.remove(i)
-        elif i.x==0:
+    if gameover==False:
+       
+        for i in yellowbullet:
+            i.x+=10
+            if red.colliderect(i):
+                rhealth-=1
+                yellowbullet.remove(i)
+            elif i.x==700:
+                yellowbullet.remove(i)
+        for i in redbullet:
+            i.x-=10
             if yellow.colliderect(i):
-               yhealth-=1
-               redbullet.remove(i)
+                yhealth-=1
+                redbullet.remove(i)
+            elif i.x==0:
+                if yellow.colliderect(i):
+                  yhealth-=1
+                  redbullet.remove(i)
 
 
-            
+def go():
+    global winner,gameover
+    if yhealth==0:
+        winner="red"
+        gameover=True
+    if rhealth==0:
+        winner="yellow"
+        gameover=True
+
+
+
+
+
 
 
 
@@ -92,6 +113,8 @@ while True:
     yellow_move(keys)
     red_move(keys)
     hit(yellowbullet,redbullet)
+    go()
     pygame.display.update()
+
 
 
